@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.daysixhwtwo.demo.business.abstracts.EmployerCheckService;
 import com.daysixhwtwo.demo.business.abstracts.EmployerService;
+import com.daysixhwtwo.demo.core.utilities.results.DataResult;
+import com.daysixhwtwo.demo.core.utilities.results.SuccessDataResult;
 import com.daysixhwtwo.demo.dataAccess.abstracts.EmployerDao;
 import com.daysixhwtwo.demo.entities.concretes.Employer;
 
@@ -13,23 +16,24 @@ import com.daysixhwtwo.demo.entities.concretes.Employer;
 public class EmployerManager extends BaseUserManager implements EmployerService {
 	
 	private EmployerDao employerDao;
+	private EmployerCheckService employerCheckService;
 	
 	@Autowired
-	public EmployerManager(EmployerDao employerDao) {
+	public EmployerManager(EmployerDao employerDao, EmployerCheckService employerCheckService) {
 		this.employerDao = employerDao;
+		this.employerCheckService = employerCheckService;
 	}
 
 	@Override
-	public List<Employer> getAll() {
-		return this.employerDao.findAll();
+	public DataResult<List<Employer>> getAll() {
+		return new SuccessDataResult<List<Employer>>(this.employerDao.findAll());
 	}
 
 	@Override
 	public void add(Employer employer) {
-		EmployerCheckManager employerCheckManager = new EmployerCheckManager(employer, this.employerDao);
 		
-		if(employerCheckManager.emailVerified() || employerCheckManager.isConfirmed()) {
-			if(!employerCheckManager.emailAlreadyExists()) {
+		if(this.employerCheckService.emailVerified(employer) || this.employerCheckService.isConfirmed(employer)) {
+			if(!this.employerCheckService.emailAlreadyExists(employer)) {
 				this.employerDao.save(employer);
 				super.save(employer);
 			} else {
@@ -40,5 +44,5 @@ public class EmployerManager extends BaseUserManager implements EmployerService 
 		}
 		
 	}
-
+	
 }

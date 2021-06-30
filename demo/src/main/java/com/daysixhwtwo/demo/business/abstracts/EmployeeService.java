@@ -2,10 +2,12 @@ package com.daysixhwtwo.demo.business.abstracts;
 
 import java.util.List;
 
+import com.daysixhwtwo.demo.core.utilities.results.DataResult;
+import com.daysixhwtwo.demo.core.utilities.results.Result;
 import com.daysixhwtwo.demo.entities.concretes.Employee;
 
 public interface EmployeeService {
-	List<Employee> getAll();
-	void add(Employee employee);
+	DataResult<List<Employee>> getAll();
+	Result add(Employee employee);
 	
 }

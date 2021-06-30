@@ -34,4 +34,5 @@ public class JobPositionsController {
 		this.jobPositionService.addPosition(jobPosition);
 	}
 	
+	
 }

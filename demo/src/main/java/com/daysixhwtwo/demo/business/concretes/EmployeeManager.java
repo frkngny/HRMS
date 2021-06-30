@@ -5,42 +5,49 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.daysixhwtwo.demo.business.abstracts.EmployeeCheckService;
 import com.daysixhwtwo.demo.business.abstracts.EmployeeService;
+import com.daysixhwtwo.demo.core.utilities.results.DataResult;
+import com.daysixhwtwo.demo.core.utilities.results.ErrorResult;
+import com.daysixhwtwo.demo.core.utilities.results.Result;
+import com.daysixhwtwo.demo.core.utilities.results.SuccessDataResult;
 import com.daysixhwtwo.demo.dataAccess.abstracts.EmployeeDao;
 import com.daysixhwtwo.demo.entities.concretes.Employee;
+import com.daysixhwtwo.demo.core.utilities.results.SuccessResult;
 
 @Service
 public class EmployeeManager extends BaseUserManager implements EmployeeService  {
 	
 	
 	private EmployeeDao employeeDao;
+	private EmployeeCheckService employeeCheckService;
 	
 	@Autowired
-	public EmployeeManager(EmployeeDao employeeDao) {
+	public EmployeeManager(EmployeeDao employeeDao,EmployeeCheckService employeeCheckService) {
 		this.employeeDao = employeeDao;
+		this.employeeCheckService = employeeCheckService;
 	}
 	
 	@Override
-	public List<Employee> getAll() {
-		return this.employeeDao.findAll();
+	public DataResult<List<Employee>> getAll() {
+		return new SuccessDataResult<List<Employee>>(this.employeeDao.findAll());
 	}
 	
+	
 	@Override
-	public void add(Employee employee) {
-		EmployeeCheckManager employeeCheckManager = new EmployeeCheckManager(employee, this.employeeDao);
-		if(employeeCheckManager.checkIfReal()) {
-			if(!employeeCheckManager.checkIfAlreadyExists() && employeeCheckManager.emailVerified()) {
+	public Result add(Employee employee) {
+		if(this.employeeCheckService.checkIfReal(employee)) {
+			if(!this.employeeCheckService.checkIfAlreadyExists(employee) && this.employeeCheckService.emailVerified(employee)) {
 				this.employeeDao.save(employee);
-				super.save(employee);
+				return new SuccessResult(super.save(employee));
 			} else {
-				super.userExists();
+				return new ErrorResult(super.userExists());
 			}
 		} else {
-			super.invalidTC();
+			return new ErrorResult(super.invalidTC());
 		}
-	}
-
-	
 		
+		
+	}
 
 }

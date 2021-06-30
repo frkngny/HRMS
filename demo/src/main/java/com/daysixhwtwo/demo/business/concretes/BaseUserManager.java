@@ -5,28 +5,28 @@ import com.daysixhwtwo.demo.entities.concretes.Employer;
 import com.daysixhwtwo.demo.entities.concretes.Personel;
 
 public class BaseUserManager {
-	public void save(Personel personel) {
-		System.out.println("Saved to db: " + personel.getFirstName());
+	public String save(Personel personel) {
+		return "Saved to db: " + personel.getFirstName();
 	}
 	
-	public void save(Employee employee) {
-		System.out.println("Saved to db: " + employee.getFirstName());
+	public String save(Employee employee) {
+		return "Saved to db: " + employee.getFirstName();
 	}
 	
-	public void save(Employer employer) {
-		System.out.println("Saved to db: " + employer.getFirstName());
+	public String save(Employer employer) {
+		return "Saved to db: " + employer.getFirstName();
 	}
 	
-	public void userExists() {
-		System.out.println("Cannot save the user because user already exists.");
+	public String userExists() {
+		return "Cannot save the user because user already exists.";
 	}
 	
-	public void invalidTC() {
-		System.out.println("Invalid TC no!");
+	public String invalidTC() {
+		return "Invalid TC no!";
 	}
 	
-	public void cannotSave(String cause) {
-		System.out.println("Cannot save the user because " + cause);
+	public String cannotSave(String cause) {
+		return "Cannot save the user because " + cause;
 	}
 	
 }

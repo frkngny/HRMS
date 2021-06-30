@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.daysixhwtwo.demo.business.abstracts.JobPositionCheckService;
 import com.daysixhwtwo.demo.business.abstracts.JobPositionService;
 import com.daysixhwtwo.demo.dataAccess.abstracts.JobPositionDao;
 import com.daysixhwtwo.demo.entities.concretes.JobPosition;
@@ -13,10 +14,12 @@ import com.daysixhwtwo.demo.entities.concretes.JobPosition;
 public class JobPositionManager implements JobPositionService{
 	
 	private JobPositionDao jobPositionDao;
+	private JobPositionCheckService jobPositionCheckService;
 	
 	@Autowired
-	public JobPositionManager(JobPositionDao jobPositionDao) {
+	public JobPositionManager(JobPositionDao jobPositionDao, JobPositionCheckService jobPositionCheckService) {
 		this.jobPositionDao = jobPositionDao;
+		this.jobPositionCheckService = jobPositionCheckService;
 	}
 	
 	@Override
@@ -26,9 +29,7 @@ public class JobPositionManager implements JobPositionService{
 
 	@Override
 	public void addPosition(JobPosition jobPosition) {
-		JobPositionCheckManager positionCheckManager = new JobPositionCheckManager(jobPosition, this.jobPositionDao);
-		
-		if(!positionCheckManager.positionAlreadyExists()) {
+		if(!jobPositionCheckService.positionAlreadyExists(jobPosition)) {
 			this.jobPositionDao.save(jobPosition);
 			System.out.println("Position added: " + jobPosition.getJobPosition());
 		} else {

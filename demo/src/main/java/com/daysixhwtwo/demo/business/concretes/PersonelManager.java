@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.daysixhwtwo.demo.business.abstracts.PersonelService;
+import com.daysixhwtwo.demo.core.utilities.results.DataResult;
+import com.daysixhwtwo.demo.core.utilities.results.SuccessDataResult;
 import com.daysixhwtwo.demo.dataAccess.abstracts.PersonelDao;
 import com.daysixhwtwo.demo.entities.concretes.Personel;
 
@@ -20,8 +22,8 @@ public class PersonelManager extends BaseUserManager implements PersonelService 
 	}
 	
 	@Override
-	public List<Personel> getAll() {
-		return this.personelDao.findAll();
+	public DataResult<List<Personel>> getAll() {
+		return new SuccessDataResult<List<Personel>>(this.personelDao.findAll());
 	}
 
 	@Override
