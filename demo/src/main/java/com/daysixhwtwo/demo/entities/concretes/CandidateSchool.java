@@ -5,11 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="candidate_schools")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "candidates"})
 public class CandidateSchool {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -30,7 +26,7 @@ public class CandidateSchool {
 	@Column(name="candidate_id")
 	private int candidateId;
 	
-	@Column(name="school_name")
+	@Column(name="school_names")
 	private String schoolName;
 	
 	@Column(name="department")
@@ -44,8 +40,4 @@ public class CandidateSchool {
 	
 	@Column(name="graduated")
 	private boolean graduated;
-	
-	@ManyToOne
-	@JoinColumn(name="job_candidate_id")
-	private JobCandidate candidates;
 }

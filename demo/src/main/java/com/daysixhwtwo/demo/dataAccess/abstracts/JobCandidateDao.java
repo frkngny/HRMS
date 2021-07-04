@@ -3,6 +3,7 @@ package com.daysixhwtwo.demo.dataAccess.abstracts;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,4 +17,9 @@ public interface JobCandidateDao extends JpaRepository<JobCandidate, Integer> {
 	
 	@Query("Select new com.daysixhwtwo.demo.entities.dtos.JobCandidateWithSchoolDto(jc, cs) From JobCandidate jc Inner Join CandidateSchool cs ON cs.candidateId=jc.id")
 	List<JobCandidateWithSchoolDto> getJobCandidateWithSchool();
+	
+	@Query("Select new com.daysixhwtwo.demo.entities.dtos.JobCandidateWithSchoolDto(jc, cs) From JobCandidate jc Inner Join CandidateSchool cs ON cs.candidateId=jc.id")
+	List<JobCandidateWithSchoolDto> getJobCandidateWithSchoolSortedByDate(Sort sort);
+	
+	JobCandidate findById(int id);
 }

@@ -13,13 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daysixhwtwo.demo.business.abstracts.EmployeeService;
 import com.daysixhwtwo.demo.business.abstracts.EmployerService;
 import com.daysixhwtwo.demo.business.abstracts.JobAdvertisementService;
-import com.daysixhwtwo.demo.business.abstracts.JobCandidateExperienceService;
-import com.daysixhwtwo.demo.business.abstracts.JobCandidateSchoolService;
 import com.daysixhwtwo.demo.business.abstracts.JobCandidateService;
 import com.daysixhwtwo.demo.business.abstracts.PersonelService;
 import com.daysixhwtwo.demo.core.utilities.results.DataResult;
-import com.daysixhwtwo.demo.entities.concretes.CandidateExperience;
-import com.daysixhwtwo.demo.entities.concretes.CandidateSchool;
 import com.daysixhwtwo.demo.entities.concretes.Employee;
 import com.daysixhwtwo.demo.entities.concretes.Employer;
 import com.daysixhwtwo.demo.entities.concretes.JobAdvertisement;
@@ -47,12 +43,6 @@ public class UsersController<T> {
 	@Autowired
 	private JobCandidateService jobCandidateService;
 	
-	@Autowired
-	private JobCandidateExperienceService jobCandidateExperienceService;
-	
-	@Autowired
-	private JobCandidateSchoolService jobCandidateSchoolService;
-	
 	public UsersController() {}
 	
 	
@@ -78,13 +68,6 @@ public class UsersController<T> {
 		this.jobCandidateService = jobCandidateService;
 	}
 	
-	public UsersController(JobCandidateExperienceService jobCandidateExperienceService) {
-		this.jobCandidateExperienceService = jobCandidateExperienceService;
-	}
-	
-	public UsersController(JobCandidateSchoolService jobCandidateSchoolService) {
-		this.jobCandidateSchoolService = jobCandidateSchoolService;
-	}
 	
 	@GetMapping("/getallpersonel")
 	public DataResult<List<Personel>> getAllPersonel() {
@@ -146,19 +129,9 @@ public class UsersController<T> {
 		this.jobCandidateService.addJobCandidate(jobCandidate);
 	}
 	
-	@PostMapping("/addCandidateExperience")
-	public void addCandidateExperience(@RequestBody CandidateExperience candidateExperience) {
-		this.jobCandidateExperienceService.addCandidateExperience(candidateExperience);
-	}
-	
 	@GetMapping("/getJobCandidates")
 	public DataResult<List<JobCandidate>> getJobCandidates(){
 		return this.jobCandidateService.getJobCandidates();
-	}
-	
-	@GetMapping("/getJobCandidateExperience")
-	public DataResult<List<CandidateExperience>> getJobCandidateExperience(){
-		return this.jobCandidateExperienceService.getAll();
 	}
 	
 	@GetMapping("/getJobCandidateWithExperience")
@@ -166,20 +139,16 @@ public class UsersController<T> {
 		return this.jobCandidateService.getJobCandidateWithExperience();
 	}
 	
-	@PostMapping("/addJobCandidateSchool")
-	public void addJobCandidateSchool(@RequestBody CandidateSchool candidateSchool){
-		this.jobCandidateSchoolService.addSchool(candidateSchool);
-	}
-	
-	@GetMapping("/getJobCandidateSchool")
-	public DataResult<List<CandidateSchool>> getJobCandidateSchool(){
-		return this.jobCandidateSchoolService.getAllSchool();
-	}
-	
 	@GetMapping("/getJobCandidateWithSchool")
 	public DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchool(){
 		return this.jobCandidateService.getJobCandidateWithSchool();
 	}
+	
+	@GetMapping("/getJobCandidateWithSchoolSortedByDate")
+	public DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchoolSortedByDate(@RequestParam String order){
+		return this.jobCandidateService.getJobCandidateWithSchoolSortedByDate(order);
+	}
+	
 	
 	
 }

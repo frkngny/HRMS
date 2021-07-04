@@ -6,34 +6,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="candidate_languages")
-public class CandidateLanguage {
-	
+@Table(name="candidate_cover_letters")
+public class CandidateCoverLetter {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	
 	@Column(name="candidate_id")
 	private int candidateId;
 	
-	@Column(name="known_language")
-	private String knownLanguage;
-	
-	@Max(value=5)
-	@Column(name="language_level")
-	private Integer languageLevel;
-	
-	
-	
+	@Column(name="cover_letter")
+	private String coverLetter;
 }

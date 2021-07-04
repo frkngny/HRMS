@@ -3,36 +3,28 @@ package com.daysixhwtwo.demo.business.concretes;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.daysixhwtwo.demo.business.abstracts.JobCandidateExperienceService;
-import com.daysixhwtwo.demo.business.abstracts.JobCandidateCheckService;
-import com.daysixhwtwo.demo.business.abstracts.JobCandidateSchoolService;
+
 import com.daysixhwtwo.demo.business.abstracts.JobCandidateService;
+
 import com.daysixhwtwo.demo.core.utilities.results.DataResult;
+import com.daysixhwtwo.demo.core.utilities.results.ErrorDataResult;
 import com.daysixhwtwo.demo.core.utilities.results.SuccessDataResult;
-import com.daysixhwtwo.demo.dataAccess.abstracts.CandidateExperienceDao;
-import com.daysixhwtwo.demo.dataAccess.abstracts.CandidateSchoolDao;
+
 import com.daysixhwtwo.demo.dataAccess.abstracts.JobCandidateDao;
-import com.daysixhwtwo.demo.entities.concretes.CandidateExperience;
-import com.daysixhwtwo.demo.entities.concretes.CandidateSchool;
+
 import com.daysixhwtwo.demo.entities.concretes.JobCandidate;
 import com.daysixhwtwo.demo.entities.dtos.JobCandidateWithExperienceDto;
 import com.daysixhwtwo.demo.entities.dtos.JobCandidateWithSchoolDto;
 
 @Service
-public class JobCandidateManager implements JobCandidateService, JobCandidateExperienceService, JobCandidateSchoolService {
+public class JobCandidateManager implements JobCandidateService {
 	@Autowired
 	private JobCandidateDao jobCandidateDao;
 	
-	@Autowired
-	private CandidateExperienceDao candidateExperienceDao;
-	
-	@Autowired
-	private CandidateSchoolDao candidateSchoolDao;
-	
-	@Autowired
-	private JobCandidateCheckService jobCandidateCheckService;
+
 	
 	public JobCandidateManager() {}
 	
@@ -41,17 +33,6 @@ public class JobCandidateManager implements JobCandidateService, JobCandidateExp
 		this.jobCandidateDao = jobCandidateDao;
 	}
 	
-	public JobCandidateManager(CandidateExperienceDao candidateExperienceDao) {
-		this.candidateExperienceDao = candidateExperienceDao;
-	}
-	
-	public JobCandidateManager(CandidateSchoolDao candidateSchoolDao) {
-		this.candidateSchoolDao = candidateSchoolDao;
-	}
-	
-	public JobCandidateManager(JobCandidateCheckService jobCandidateCheckService) {
-		this.jobCandidateCheckService = jobCandidateCheckService;
-	}
 	
 	@Override
 	public void addJobCandidate(JobCandidate jobCandidate) {
@@ -59,22 +40,9 @@ public class JobCandidateManager implements JobCandidateService, JobCandidateExp
 	}
 
 	@Override
-	public void addCandidateExperience(CandidateExperience candidateExperience) {
-		this.candidateExperienceDao.save(candidateExperience);
-	}
-
-
-	@Override
 	public DataResult<List<JobCandidate>> getJobCandidates() {
 		return new SuccessDataResult<List<JobCandidate>>(this.jobCandidateDao.findAll());
 	}
-
-
-	@Override
-	public DataResult<List<CandidateExperience>> getAll() {
-		return new SuccessDataResult<List<CandidateExperience>>(this.candidateExperienceDao.findAll());
-	}
-
 
 	@Override
 	public DataResult<List<JobCandidateWithExperienceDto>> getJobCandidateWithExperience() {
@@ -86,21 +54,24 @@ public class JobCandidateManager implements JobCandidateService, JobCandidateExp
 	public DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchool() {
 		return new SuccessDataResult<List<JobCandidateWithSchoolDto>>(this.jobCandidateDao.getJobCandidateWithSchool());
 	}
-
-
+	
 	@Override
-	public void addSchool(CandidateSchool candidateSchool) {
-		if(!this.jobCandidateCheckService.isGraduated(candidateSchool)) {
-			candidateSchool.setSchoolEndYear(0);
+	public DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchoolSortedByDate(String order) {
+		Sort sort;
+		if (order.equals("ASC")) {
+			sort = Sort.by(Sort.Direction.ASC, "cs.schoolEndYear");
+		} else if (order.equals("DESC")){
+			sort = Sort.by(Sort.Direction.DESC, "cs.schoolEndYear");
+		} else {
+			return new ErrorDataResult<List<JobCandidateWithSchoolDto>>("order must be ASC or DESC");
 		}
-		this.candidateSchoolDao.save(candidateSchool);
+		return new SuccessDataResult<List<JobCandidateWithSchoolDto>>(this.jobCandidateDao.getJobCandidateWithSchoolSortedByDate(sort));
 	}
 
 
 	@Override
-	public DataResult<List<CandidateSchool>> getAllSchool() {
-		return new SuccessDataResult<List<CandidateSchool>>(this.candidateSchoolDao.findAll());
+	public DataResult<JobCandidate> findJobCandidateById(int id) {
+		return new SuccessDataResult<JobCandidate>(this.jobCandidateDao.findById(id));
 	}
 	
-
 }

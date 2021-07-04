@@ -9,4 +9,5 @@ import com.daysixhwtwo.demo.entities.concretes.CandidateExperience;
 public interface JobCandidateExperienceService {
 	void addCandidateExperience(CandidateExperience candidateExperience);
 	DataResult<List<CandidateExperience>> getAll();
+	DataResult<List<CandidateExperience>> getCandidateExperienceByCandidateId(int candidateId);
 }

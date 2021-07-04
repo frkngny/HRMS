@@ -12,4 +12,7 @@ public interface JobCandidateService {
 	DataResult<List<JobCandidate>> getJobCandidates();
 	DataResult<List<JobCandidateWithExperienceDto>> getJobCandidateWithExperience();
 	DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchool();
+	DataResult<List<JobCandidateWithSchoolDto>> getJobCandidateWithSchoolSortedByDate(String order);
+	
+	DataResult<JobCandidate> findJobCandidateById(int id);
 }
